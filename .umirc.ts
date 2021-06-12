@@ -1,5 +1,5 @@
 import { defineConfig } from 'umi';
-import routes from './routes';
+import routes from './src/routes/index';
 export default defineConfig({
   nodeModulesTransform: {
     type: 'none',

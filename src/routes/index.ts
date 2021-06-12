@@ -9,13 +9,13 @@ const routes: (
   },
   {
     path: '/home',
-    component: '../pages/home',
+    component: '@/pages/home',
     name: 'ToDo',
     icon: 'home',
   },
   {
     path: '/setting',
-    component: '../pages/setting',
+    component: '@/pages/setting',
     name: 'Setting',
     icon: 'setting',
   },
