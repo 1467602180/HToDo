@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProCard from '@ant-design/pro-card';
-import { Button, Space } from 'antd';
+import { Button, Drawer, Image, Popover, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ModalForm,
@@ -14,8 +14,19 @@ import todoMap from '@/maps/todoMap';
 import { useModel } from 'umi';
 import { getBase64 } from '@/utils';
 import { ToDoType } from '@/models/todo';
+import cardMap, { cardMapEnum } from '@/maps/cardMap';
+import ProDescriptions, {
+  ProDescriptionsItemProps,
+} from '@ant-design/pro-descriptions';
 
 const Home: FC = () => {
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
+  const [currentToDo, setCurrentToDo] = useState<ToDoType>({
+    describe: '',
+    images: [],
+    name: '',
+    type: 0,
+  });
   const { todo, addToDo } = useModel('todo', (model) => ({
     todo: model.todo,
     addToDo: model.addToDo,
@@ -39,6 +50,7 @@ const Home: FC = () => {
     <ModalForm
       modalProps={{
         mask: false,
+        destroyOnClose: true,
       }}
       onFinish={onFinish}
       title="新增计划"
@@ -68,6 +80,36 @@ const Home: FC = () => {
   const filterDataType = (type: number): ToDoType[] => {
     return todo.filter((item) => item.type === type);
   };
+  const descColumn: ProDescriptionsItemProps<ToDoType, 'text'>[] = [
+    {
+      title: '计划名称',
+      dataIndex: 'name',
+    },
+    {
+      title: '计划规划',
+      dataIndex: 'type',
+      valueEnum: cardMapEnum(),
+    },
+    {
+      title: '计划描述',
+      dataIndex: 'describe',
+      valueType: 'textarea',
+    },
+    {
+      title: '图片描述',
+      dataIndex: 'images',
+      render: (dom, entity) =>
+        entity.images ? (
+          <Space wrap>
+            {entity.images.map((item, index) => (
+              <Image width={50} height={50} src={item} key={`${index}`} />
+            ))}
+          </Space>
+        ) : (
+          '-'
+        ),
+    },
+  ];
 
   return (
     <PageContainer
@@ -78,44 +120,54 @@ const Home: FC = () => {
       extra={extra()}
     >
       <ProCard ghost gutter={[8, 8]} wrap>
-        <ProCard
-          style={{ background: '#fff9f9', color: '#fcd0ce' }}
-          title="重要紧急"
-          colSpan={12}
-        >
-          <Space>
-            {filterDataType(0).map((item, index) => (
-              <Button key={`${index}`} type={'primary'}>
-                {item.name}
-              </Button>
-            ))}
-          </Space>
-        </ProCard>
-        <ProCard
-          title="重要不紧急"
-          style={{ background: '#fffdf5', color: '#fdecae' }}
-          colSpan={12}
-        >
-          demo
-        </ProCard>
-        <ProCard
-          title="不重要紧急"
-          style={{ background: '#f8f9ff', color: '#c5d0ff' }}
-          colSpan={12}
-        >
-          demo
-        </ProCard>
-        <ProCard
-          title="不紧急不重要"
-          style={{ background: '#f8fdfc', color: '#c5f1e4' }}
-          colSpan={12}
-        >
-          demo
-        </ProCard>
-        <ProCard title="待规划" colSpan={24}>
-          demo
-        </ProCard>
+        {cardMap.map((item) => (
+          <ProCard
+            key={item.title}
+            style={{
+              background: item.background,
+              color: item.color,
+              height: '100%',
+            }}
+            title={item.title}
+            colSpan={item.colSpan}
+          >
+            <Space wrap>
+              {filterDataType(item.type).map((item, index) => (
+                <Popover
+                  key={`${index}`}
+                  title={'计划描述'}
+                  content={item.describe || '无描述'}
+                >
+                  <Button
+                    onClick={() => {
+                      setCurrentToDo(item);
+                      setDrawerVisible(true);
+                    }}
+                    type={'primary'}
+                  >
+                    {item.name}
+                  </Button>
+                </Popover>
+              ))}
+            </Space>
+          </ProCard>
+        ))}
       </ProCard>
+      <Drawer
+        title={'计划详情'}
+        mask={false}
+        width={500}
+        visible={drawerVisible}
+        onClose={() => {
+          setDrawerVisible(false);
+        }}
+      >
+        <ProDescriptions<ToDoType>
+          dataSource={currentToDo}
+          column={1}
+          columns={descColumn}
+        />
+      </Drawer>
     </PageContainer>
   );
 };
