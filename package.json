@@ -30,7 +30,9 @@
     "@ant-design/pro-list": "^1.9.1",
     "@umijs/preset-react": "1.x",
     "antd": "^4.16.2",
+    "dayjs": "^1.10.5",
     "electron": "^13.1.2",
+    "loadsh": "^0.0.4",
     "localforage": "^1.9.0",
     "umi": "^3.4.25"
   },
