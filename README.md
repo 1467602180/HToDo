@@ -1,15 +1,5 @@
-# umi project
+# HToDO
 
-## Getting Started
+一个基于Umijs+Electron构建的优雅好看的ToDo系统
 
-Install dependencies,
-
-```bash
-$ yarn
-```
-
-Start the dev server,
-
-```bash
-$ yarn start
-```
+![img.png](./img.png)
