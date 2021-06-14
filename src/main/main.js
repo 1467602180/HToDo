@@ -1,15 +1,21 @@
 // 引入electron并创建一个Browserwindow
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('url');
 // 保持window对象的全局引用,避免JavaScript对象被垃圾回收时,窗口被自动关闭.
 let mainWindow;
+
 function createWindow() {
   // 创建浏览器窗口,宽高自定义具体大小你开心就好
   mainWindow = new BrowserWindow({
     width: 1100,
     height: 800,
     title: 'HToDo',
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
+      contextIsolation: false,
+    },
   });
   mainWindow.removeMenu();
   // 加载应用-----  electron-quick-start中默认的加载入口
@@ -27,7 +33,7 @@ function createWindow() {
   } else {
     mainWindow.loadURL(
       url.format({
-        pathname: path.join(__dirname, 'build/index.html'),
+        pathname: path.join(__dirname, '../../dist/index.html'),
         protocol: 'file:',
         slashes: true,
       }),
@@ -40,6 +46,7 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
 // 当 Electron 完成初始化并准备创建浏览器窗口时调用此方法
 app.on('ready', createWindow);
 // 所有窗口关闭时退出应用.
@@ -56,3 +63,17 @@ app.on('activate', () => {
   }
 });
 // 你可以在这个脚本中续写或者使用require引入独立的js文件.
+
+ipcMain.on('getDevToolState', (event) => {
+  event.sender.send('resultDevToolState', {
+    isOpen: mainWindow.webContents.isDevToolsOpened(),
+  });
+});
+
+ipcMain.on('openDevTool', (event) => {
+  mainWindow.webContents.openDevTools();
+});
+
+ipcMain.on('closeDevTool', (event) => {
+  mainWindow.webContents.closeDevTools();
+});

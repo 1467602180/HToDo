@@ -18,5 +18,6 @@
 /src/render/.umi-test
 /.env.local
 /src/.umi
+/build
 
 /.idea

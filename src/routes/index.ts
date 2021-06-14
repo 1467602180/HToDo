@@ -10,14 +10,14 @@ const routes: (
   {
     path: '/home',
     component: '@/pages/home',
-    name: 'ToDo',
-    icon: 'home',
+  },
+  {
+    path: '/done',
+    component: '@/pages/done',
   },
   {
     path: '/setting',
     component: '@/pages/setting',
-    name: 'Setting',
-    icon: 'setting',
   },
 ];
 

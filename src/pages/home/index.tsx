@@ -215,25 +215,28 @@ const Home: FC = () => {
             title={item.title}
             colSpan={item.colSpan}
           >
-            <Space wrap>
-              {filterDataType(item.type).map((item, index) => (
-                <Popover
-                  key={`${index}`}
-                  title={'计划描述'}
-                  content={item.describe || '无描述'}
-                >
-                  <Button
-                    onClick={() => {
-                      setCurrentToDo(item);
-                      setDrawerVisible(true);
-                    }}
-                    type={'primary'}
+            {todo.length > 0 ? (
+              <Space wrap>
+                {filterDataType(item.type).map((item, index) => (
+                  <Popover
+                    key={`${index}`}
+                    title={'计划描述'}
+                    content={item.describe || '无描述'}
                   >
-                    {item.name}
-                  </Button>
-                </Popover>
-              ))}
-            </Space>
+                    <Button
+                      onClick={() => {
+                        setCurrentToDo(item);
+                        setDrawerVisible(true);
+                      }}
+                      type={'primary'}
+                    >
+                      {item.name}
+                    </Button>
+                  </Popover>
+                ))}
+              </Space>
+            ) : null}
+            {todo.length === 0 ? '无计划' : null}
           </ProCard>
         ))}
       </ProCard>

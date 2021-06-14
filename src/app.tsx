@@ -1,7 +1,11 @@
 import { BasicLayoutProps } from '@ant-design/pro-layout';
 import { history } from 'umi';
 import { Button, Space } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
+import {
+  HomeOutlined,
+  SettingOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
 
 export const layout: BasicLayoutProps = {
   logo: <></>,
@@ -25,4 +29,21 @@ export const layout: BasicLayoutProps = {
       />
     </Space>
   ),
+  menuDataRender: () => [
+    {
+      name: 'ToDo',
+      icon: <HomeOutlined />,
+      path: '/home',
+    },
+    {
+      name: 'Done',
+      icon: <UnorderedListOutlined />,
+      path: '/done',
+    },
+    {
+      name: 'Setting',
+      icon: <SettingOutlined />,
+      path: '/setting',
+    },
+  ],
 };
